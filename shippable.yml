@@ -57,6 +57,7 @@ jobs:
     steps:
       - IN: prov_ecs_test
       - IN: release_beta_app
+        deployName: test_app
       - IN: test_params_app
       - IN: test_env_ecs
 #      - IN: e2eshipdemo-alb-test
