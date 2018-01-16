@@ -55,11 +55,12 @@ jobs:
     dependencyMode: strict
     triggerMode: parallel
     steps:
-      - IN: prov_ecs_test
       - IN: release_beta_app
         deployName: test_app
       - IN: test_params_app
+        switch: off
       - IN: test_env_ecs
+        switch: off
 #      - IN: e2eshipdemo-alb-test
 #        applyTo:
 #          - manifest: manifest_app
