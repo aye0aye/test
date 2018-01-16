@@ -1,0 +1,90 @@
+#---------------------------------------------------------------#
+#------------------------  Test Resources  ---------------------#
+#---------------------------------------------------------------#
+
+resources:
+# Set app version seed
+  - name: seed_version_app
+    type: version
+    versionTemplate:
+      versionName: "1.0.0"
+
+# App TEST env vars
+  - name: test_params_app
+    type: params
+    versionTemplate:
+      params:
+        ENVIRONMENT: "TEST"
+        PORT: 80
+
+# REPO of BVT Automation scripts
+  - name: bvt_repo
+    type: gitRepo
+    integration: "demo_github"
+    versionTemplate:
+      sourceName: "aye0aye/test"
+      branch: master
+
+# SIT env vars
+  - name: bvt_params
+    type: params
+    versionTemplate:
+      params:
+        API_URL: "54.158.18.50:8080"
+        API_TOKEN: "NA"
+
+#---------------------------------------------------------------#
+#---------------------------  Test Jobs  -----------------------#
+#---------------------------------------------------------------#
+
+jobs:
+# Trigger TEST Release
+  - name: release_beta_app
+    type: release
+    steps:
+      - IN: manifest_app
+      - IN: seed_version_app
+      - TASK: managed
+        bump: beta
+    flags:
+      - e2e_demo_app
+
+# Deploy to TEST environment
+  - name: deploy_test_app
+    type: deploy
+    dependencyMode: strict
+    triggerMode: parallel
+    steps:
+      - IN: prov_ecs_test
+      - IN: release_beta_app
+      - IN: test_params_app
+      - IN: test_env_ecs
+#      - IN: e2eshipdemo-alb-test
+#        applyTo:
+#          - manifest: manifest_app
+#            image: ecr_img_app
+#            port: 80
+      - TASK: managed
+    flags:
+      - e2e_demo_app
+
+# Run Build Verification Tests
+  - name: auto_bvt
+    type: runSh
+    dependencyMode: strict
+    triggerMode: parallel
+    steps:
+      - IN: deploy_test_app
+      - IN: bvt_repo
+      - IN: bvt_params
+      - TASK:
+          script:
+            - pushd $(shipctl get_resource_state "bvt_repo")
+            - ./test.sh bvt_params
+            - popd
+    on_success:
+      - script: touch /build/state/success.txt
+    on_failure:
+      - script: touch /build/state/failure.txt
+    flags:
+      - e2e_demo_app
