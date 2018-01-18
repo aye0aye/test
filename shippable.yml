@@ -82,11 +82,10 @@ jobs:
       - TASK:
           script:
             - pushd $(shipctl get_resource_state "bvt_repo")
-            - ./test.sh bvt_params
+            - echo "Starting Testing Env setup"
+            - npm install
+            - multi="xunit=shippable/testresults/test.xml json=shippable/testresults/test.json" npm run-script test-core
+            - echo "Completed Testing Env setup"
             - popd
-    on_success:
-      - script: touch /build/state/success.txt
-    on_failure:
-      - script: touch /build/state/failure.txt
     flags:
       - e2e_demo_app
