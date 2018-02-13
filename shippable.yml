@@ -104,32 +104,31 @@ jobs:
 
 ########################### Google Cloud Kubernetes Jobs ########################
 # BE App Create Template
-  - name: vote-be-temp
+  - name: appBETemp
     type: manifest
     steps:
-      - IN: vote_be
+      - IN: dh_img_app_be
       - IN: test_be_options
       - TASK: managed
 
 # FE App Create Template
-  - name: vote-fe-temp
+  - name: appFETemp
     type: manifest
     steps:
-      - IN: vote_fe
+      - IN: dh_img_app_fe
       - IN: test_fe_params
       - IN: test_fe_options
       - TASK: managed
 
 # Test Env Deploy
-  - name: deploy-test-vote-app
+  - name: deploy_test_app
     type: deploy
     method: replace
     steps:
-      - IN: vote-be-temp
-      - IN: vote-fe-temp
+      - IN: appBETemp
+      - IN: appFETemp
       - IN: gke_cluster
       - TASK: managed
-
 
 ########################### AWS ECS Jobs ########################
 # Trigger TEST Release
