@@ -125,7 +125,7 @@ jobs:
       - TASK: managed
 
 # Test Env Deploy
-  - name: deploy_gke_test_app
+  - name: deployGKEAppTest
     type: deploy
     method: replace
     dependencyMode: strict
