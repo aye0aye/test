@@ -121,7 +121,7 @@ jobs:
       - TASK: managed
 
 # Test Env Deploy
-  - name: deploy_test_app
+  - name: deploy_gke_test_app
     type: deploy
     method: replace
     steps:
