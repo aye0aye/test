@@ -183,6 +183,7 @@ jobs:
       - IN: gcloud_cli
       - IN: dh_img_app_be
       - IN: dh_img_app_fe
+      - IN: gke_cluster
       - IN: bvt_repo
         switch: off
       - TASK:
@@ -203,11 +204,13 @@ jobs:
             - cp beSvc.yml.template beSvc.yml
             - cp feSvc.yml.template feSvc.yml
             - shipctl replace bePod.yml fePod.yml beSvc.yml feSvc.yml
-            - cat bePod.yml
-            - echo ##############
-            - cat fePod.yml
-            - echo ##############
-            - cat feSvc.yml
+            - export CLUST=$(shipctl get_resource_version_key gke_cluster sourceName)
+            - export CLUST_REG=$(shipctl get_resource_version_key gke_cluster region)
+            - gcloud container clusters get-credentials $CLUST --zone $CLUST_REG
+            - kubectl delete deployment $FE_LABEL 2>/dev/null || echo ""
+            - kubectl delete deployment $BE_LABEL 2>/dev/null || echo ""
+            - kubectl delete service $FE_LABEL 2>/dev/null || echo ""
+            - kubectl delete service $BE_LABEL 2>/dev/null || echo ""
             - popd
     flags:
       - gke
