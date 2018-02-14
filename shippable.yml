@@ -141,7 +141,7 @@ jobs:
     steps:
       - IN: appBETemp
       - IN: appFETemp
-#      - IN: gke_cluster
+      - IN: gke_cluster
       - TASK: managed
     flags:
       - gke
