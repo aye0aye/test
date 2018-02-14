@@ -194,10 +194,10 @@ jobs:
           script:
             - pushd $(shipctl get_resource_state "bvt_repo")
             - cd kubeSpecs
-            - BE_IMG=$(shipctl get_resource_version_key dh_img_app_be sourceName)
-            - BE_TAG=$(shipctl get_resource_version_name dh_img_app_be)
-            - FE_IMG=$(shipctl get_resource_version_key dh_img_app_fe sourceName)
-            - FE_TAG=$(shipctl get_resource_version_name dh_img_app_fe)
+            - export BE_IMG=$(shipctl get_resource_version_key dh_img_app_be sourceName)
+            - export BE_TAG=$(shipctl get_resource_version_name dh_img_app_be)
+            - export FE_IMG=$(shipctl get_resource_version_key dh_img_app_fe sourceName)
+            - export FE_TAG=$(shipctl get_resource_version_name dh_img_app_fe)
             - cp bePod.yml.template bePod.yml
             - cp fePod.yml.template fePod.yml
             - cp beSvc.yml.template beSvc.yml
