@@ -177,8 +177,6 @@ jobs:
             - multi="xunit=shippable/testresults/test.xml json=shippable/testresults/test.json" npm run-script test-core
             - echo "Completed Testing Env setup"
             - popd
-    flags:
-      - test
 
 ###################################################################
 ##### AWS ECS App Test Jobs
