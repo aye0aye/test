@@ -69,14 +69,8 @@ resources:
         REDIS: "test-be-lb"
 
 ##################################################################
-#### Application Release Automation Resources
+#### BVT Resources
 ##################################################################
-
-# Set app version seed
-  - name: seed_version_app
-    type: version
-    versionTemplate:
-      versionName: "1.0.0"
 
 # REPO of BVT Automation scripts
   - name: bvt_repo
