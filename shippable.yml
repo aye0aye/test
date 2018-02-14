@@ -195,13 +195,19 @@ jobs:
             - pushd $(shipctl get_resource_state "bvt_repo")
             - cd kubeSpecs
             - BE_IMG=$(shipctl get_resource_version_key dh_img_app_be sourceName)
-            - echo $BE_IMG
             - BE_TAG=$(shipctl get_resource_version_name dh_img_app_be)
-            - echo $BE_TAG
+            - FE_IMG=$(shipctl get_resource_version_key dh_img_app_fe sourceName)
             - FE_TAG=$(shipctl get_resource_version_name dh_img_app_fe)
-            - echo $FE_TAG
-            - echo $FE_LABEL
-            - echo $BE_LABEL
+            - cp bePod.yml.template bePod.yml
+            - cp fePod.yml.template fePod.yml
+            - cp beSvc.yml.template beSvc.yml
+            - cp feSvc.yml.template feSvc.yml
+            - shipctl replace bePod.yml fePod.yml beSvc.yml feSvc.yml
+            - cat bePod.yml
+            - echo ##############
+            - cat fePod.yml
+            - echo ##############
+            - cat feSvc.yml
             - popd
     flags:
       - gke
