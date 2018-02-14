@@ -186,6 +186,11 @@ jobs:
       - IN: bvt_repo
         switch: off
       - TASK:
+          runtime:
+            options:
+              env:
+                - FE_LABEL: "kctl-fe-test"
+                - BE_LABEL: "kctl-be-test"
           script:
             - pushd $(shipctl get_resource_state "bvt_repo")
             - cd kubeSpecs

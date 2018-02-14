@@ -11,7 +11,7 @@ spec:
        spec:
         containers:
         - name: ${BE_LABEL}
-          image: redis
+          image: ${BE_LABEL}/${BE_TAG}
           ports:
           - containerPort: 6379
           name: redis
