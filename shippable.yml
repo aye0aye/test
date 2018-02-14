@@ -169,10 +169,10 @@ jobs:
     steps:
 #      - IN: deployECSAppTest
       - IN: provGKETestLB
-        switch: off
       - IN: bvt_repo
         switch: off
       - IN: bvt_params
+        switch: off
       - TASK:
           script:
             - pushd $(shipctl get_resource_state "bvt_repo")
