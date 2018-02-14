@@ -118,7 +118,6 @@ jobs:
       - TASK: managed
     flags:
       - gke
-      - test
 
 # FE App Create Template
   - name: appFETemp
@@ -131,7 +130,6 @@ jobs:
       - TASK: managed
     flags:
       - gke
-      - test
 
 # Test Env Deploy
   - name: deployGKEAppTest
@@ -145,7 +143,6 @@ jobs:
       - TASK: managed
     flags:
       - gke
-      - test
 
 # Test LB Provision
   - name: provGKETestLB
@@ -157,7 +154,6 @@ jobs:
       - IN: deployGKEAppTest
     flags:
       - gke
-      - test
 
 ##################################################################
 ####  App Build Verification Tests
