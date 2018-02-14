@@ -75,13 +75,13 @@ resources:
       params:
         REDIS: "test-be-lb"
 
-# Kubectl prvisioningparams
-  - name: kubectl_prov_params
-    type: params
-    version:
-      params:
-        FE_LABEL: "kctl-fe-test"
-        BE_LABEL: "kctl-be-test"
+## Kubectl prvisioningparams
+#  - name: kubectl_prov_params
+#    type: params
+#    version:
+#      params:
+#        FE_LABEL: "kctl-fe-test"
+#        BE_LABEL: "kctl-be-test"
 
 
 ##################################################################
@@ -200,6 +200,8 @@ jobs:
             - echo $BE_TAG
             - FE_TAG=$(shipctl get_resource_version_name dh_img_app_fe)
             - echo $FE_TAG
+            - echo $FE_LABEL
+            - echo $BE_LABEL
             - popd
     flags:
       - gke
