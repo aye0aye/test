@@ -189,6 +189,8 @@ jobs:
           script:
             - pushd $(shipctl get_resource_state "bvt_repo")
             - cd kubeSpecs
+            - BE_IMG=$(shipctl get_resource_version_key dh_img_app_be sourceName)
+            - echo $BE_IMG
             - BE_TAG=$(shipctl get_resource_version_name dh_img_app_be)
             - echo $BE_TAG
             - FE_TAG=$(shipctl get_resource_version_name dh_img_app_fe)
