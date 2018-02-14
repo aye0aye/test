@@ -211,6 +211,11 @@ jobs:
             - kubectl delete deployment $BE_LABEL 2>/dev/null || echo ""
             - kubectl delete service $FE_LABEL 2>/dev/null || echo ""
             - kubectl delete service $BE_LABEL 2>/dev/null || echo ""
+            - kubectl create -o json -f ./bePod.yml >> kube_output.json
+            - kubectl create -o json -f ./beSvc.yml >> kube_output.json
+            - kubectl create -o json -f ./fePod.yml >> kube_output.json
+            - kubectl create -o json -f ./feSvc.yml >> kube_output.json
+            - cat kube_output.json
             - popd
     flags:
       - gke
