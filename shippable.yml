@@ -101,7 +101,6 @@ resources:
 #---------------------------------------------------------------#
 
 jobs:
-
 ########################### Google Cloud Kubernetes Jobs ########################
 # BE App Create Template
   - name: appBETemp
@@ -112,7 +111,7 @@ jobs:
       - IN: test_be_options
       - TASK: managed
     flags:
-      - gke_test
+      - gke
 
 # FE App Create Template
   - name: appFETemp
@@ -124,7 +123,7 @@ jobs:
       - IN: test_fe_options
       - TASK: managed
     flags:
-      - gke_test
+      - gke
 
 # Test Env Deploy
   - name: deployGKEAppTest
@@ -137,7 +136,7 @@ jobs:
       - IN: gke_cluster
       - TASK: managed
     flags:
-      - gke_test
+      - gke
 
 # Test LB Provision
   - name: prov_test_lb
@@ -148,7 +147,7 @@ jobs:
       - IN: test_fe_lb
       - IN: deployGKEAppTest
     flags:
-      - gke_test
+      - gke
 
 ########################### AWS ECS Jobs ########################
 # Trigger TEST Release
@@ -160,7 +159,7 @@ jobs:
       - TASK: managed
         bump: beta
     flags:
-      - e2e_demo_app
+      - ecs
 
 # Deploy to TEST environment
   - name: deploy_test_app
@@ -181,7 +180,7 @@ jobs:
 #            port: 80
       - TASK: managed
     flags:
-      - e2e_demo_app
+      - ecs
 
 # Run Build Verification Tests
   - name: auto_bvt
@@ -201,4 +200,4 @@ jobs:
             - echo "Completed Testing Env setup"
             - popd
     flags:
-      - e2e_demo_app
+      - ecs
