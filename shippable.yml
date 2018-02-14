@@ -192,6 +192,7 @@ jobs:
       - IN: prov_test_lb
         switch: off
       - IN: bvt_repo
+        switch: off
       - IN: bvt_params
       - TASK:
           script:
