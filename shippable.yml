@@ -118,6 +118,7 @@ jobs:
       - TASK: managed
     flags:
       - gke
+      - cd
 
 # FE App Create Template
   - name: appFETemp
@@ -130,6 +131,7 @@ jobs:
       - TASK: managed
     flags:
       - gke
+      - cd
 
 # Test Env Deploy
   - name: deployGKEAppTest
@@ -143,6 +145,7 @@ jobs:
       - TASK: managed
     flags:
       - gke
+      - cd
 
 # Test LB Provision
   - name: provGKETestLB
@@ -154,6 +157,7 @@ jobs:
       - IN: deployGKEAppTest
     flags:
       - gke
+      - cd
 
 ##################################################################
 ####  App Build Verification Tests
@@ -177,6 +181,8 @@ jobs:
             - multi="xunit=shippable/testresults/test.xml json=shippable/testresults/test.json" npm run-script test-core
             - echo "Completed Testing Env setup"
             - popd
+    flags:
+      - cd
 
 ###################################################################
 ##### AWS ECS App Test Jobs
