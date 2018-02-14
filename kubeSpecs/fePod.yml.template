@@ -4,26 +4,26 @@ metadata:
   name: ${FE_LABEL}
 spec:
   replicas: 1
-    strategy:
-      rollingUpdate:
-        maxSurge: 1
-        maxUnavailable: 1
-    minReadySeconds: 5
-    template:
-      metadata:
-        labels:
-          app: ${FE_LABEL}
-        spec:
-          containers:
-          - name: ${FE_LABEL}
-            image: ${FE_IMG}:${FE_TAG}
-            ports:
-            - containerPort: 80
-            resources:
-              requests:
-                cpu: 250m
-              limits:
-                cpu: 500m
-            env:
-            - name: REDIS
-              value: "${BE_LABEL}"
+  strategy:
+    rollingUpdate:
+      maxSurge: 1
+      maxUnavailable: 1
+  minReadySeconds: 5
+  template:
+    metadata:
+      labels:
+        app: ${FE_LABEL}
+    spec:
+      containers:
+      - name: ${FE_LABEL}
+        image: ${FE_IMG}:${FE_TAG}
+        ports:
+        - containerPort: 80
+        resources:
+          requests:
+            cpu: 250m
+          limits:
+            cpu: 500m
+        env:
+        - name: REDIS
+          value: "${BE_LABEL}"

@@ -8,9 +8,9 @@ spec:
     metadata:
       labels:
         app: ${BE_LABEL}
-       spec:
-        containers:
-        - name: ${BE_LABEL}
-          image: ${BE_IMG}:${BE_TAG}
-          ports:
-          - containerPort: 6379
+    spec:
+      containers:
+      - name: ${BE_LABEL}
+        image: ${BE_IMG}:${BE_TAG}
+        ports:
+        - containerPort: 6379
