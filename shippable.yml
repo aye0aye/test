@@ -189,6 +189,8 @@ jobs:
     triggerMode: parallel
     steps:
       - IN: deploy_test_app
+      - IN: prov_test_lb
+        switch: off
       - IN: bvt_repo
       - IN: bvt_params
       - TASK:
