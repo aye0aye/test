@@ -112,6 +112,7 @@ jobs:
       - TASK: managed
     flags:
       - gke
+      - test
 
 # FE App Create Template
   - name: appFETemp
@@ -124,6 +125,7 @@ jobs:
       - TASK: managed
     flags:
       - gke
+      - test
 
 # Test Env Deploy
   - name: deployGKEAppTest
@@ -137,6 +139,7 @@ jobs:
       - TASK: managed
     flags:
       - gke
+      - test
 
 # Test LB Provision
   - name: prov_test_lb
@@ -148,6 +151,7 @@ jobs:
       - IN: deployGKEAppTest
     flags:
       - gke
+      - test
 
 ########################### AWS ECS Jobs ########################
 # Trigger TEST Release
@@ -160,6 +164,7 @@ jobs:
         bump: beta
     flags:
       - ecs
+      - test
 
 # Deploy to TEST environment
   - name: deploy_test_app
@@ -181,6 +186,7 @@ jobs:
       - TASK: managed
     flags:
       - ecs
+      - test
 
 # Run Build Verification Tests
   - name: auto_bvt
@@ -203,4 +209,4 @@ jobs:
             - echo "Completed Testing Env setup"
             - popd
     flags:
-      - ecs
+      - test
