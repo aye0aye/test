@@ -7,6 +7,13 @@ resources:
 #### GKE Test Resources
 ##################################################################
 
+# gcloud CLI Config
+  - name: gcloud_cli
+    type: cliConfig
+    integration: demo_gke
+    pointer:
+      region: "us-west1-a"
+
 # BE Container Options
   - name: test_be_options
     type: dockerOptions
@@ -67,6 +74,15 @@ resources:
     version:
       params:
         REDIS: "test-be-lb"
+
+# Kubectl prvisioningparams
+  - name: kubectl_prov_params
+    type: params
+    version:
+      params:
+        FE_LABEL: "kctl-fe-test"
+        BE_LABEL: "kctl-be-test"
+
 
 ##################################################################
 #### BVT Resources
@@ -155,6 +171,29 @@ jobs:
       - IN: gke_test_be_lb
       - IN: gke_test_fe_lb
       - IN: deployGKEAppTest
+    flags:
+      - gke
+      - cd
+
+# Test Provision with kubectl
+  - name: provGKETestKubectl
+    type: runSh
+    dependencyMode: strict
+    steps:
+      - IN: gcloud_cli
+      - IN: dh_img_app_be
+      - IN: dh_img_app_fe
+      - IN: bvt_repo
+        switch: off
+      - TASK:
+          script:
+            - pushd $(shipctl get_resource_state "bvt_repo")
+            - cd kubeSpecs
+            - BE_TAG=$(shipctl get_resource_version_name dh_img_app_be)
+            - echo $BE_TAG
+            - FE_TAG=$(shipctl get_resource_version_name dh_img_app_fe)
+            - echo $FE_TAG
+            - popd
     flags:
       - gke
       - cd

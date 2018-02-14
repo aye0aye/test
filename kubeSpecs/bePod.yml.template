@@ -1,0 +1,17 @@
+apiVersion: apps/v1beta1
+kind: Deployment
+metadata:
+  name: ${BE_LABEL}
+spec:
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: ${BE_LABEL}
+       spec:
+        containers:
+        - name: ${BE_LABEL}
+          image: redis
+          ports:
+          - containerPort: 6379
+          name: redis
