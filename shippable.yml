@@ -3,37 +3,11 @@
 #---------------------------------------------------------------#
 
 resources:
-# Set app version seed
-  - name: seed_version_app
-    type: version
-    versionTemplate:
-      versionName: "1.0.0"
 
-# App TEST env vars
-  - name: test_params_app
-    type: params
-    versionTemplate:
-      params:
-        ENVIRONMENT: "TEST"
-        PORT: 80
+##################################################################
+#### GKE Test Resources
+##################################################################
 
-# REPO of BVT Automation scripts
-  - name: bvt_repo
-    type: gitRepo
-    integration: "demo_github"
-    versionTemplate:
-      sourceName: "aye0aye/test"
-      branch: master
-
-# SIT env vars
-  - name: bvt_params
-    type: params
-    versionTemplate:
-      params:
-        API_URL: "54.158.18.50:8080"
-        API_TOKEN: "NA"
-
-########################### Backend Test Resources ##########################
 # BE Container Options
   - name: test_be_options
     type: dockerOptions
@@ -45,7 +19,7 @@ resources:
         app: "test_be"
 
 # BE Internal load-balancer
-  - name: test_be_lb
+  - name: gke_test_be_lb
     type: loadBalancer
     integration: demo_gke
     pointer:
@@ -61,7 +35,6 @@ resources:
       selector:
         app: "test_be"
 
-############################ Frontend Test Resources ###################
 # FE Container Options
   - name: test_fe_options
     type: dockerOptions
@@ -73,7 +46,7 @@ resources:
         app: "test_fe"
 
 # FE External load-balancer
-  - name: test_fe_lb
+  - name: gke_test_fe_lb
     type: loadBalancer
     integration: demo_gke
     pointer:
@@ -96,12 +69,53 @@ resources:
       params:
         REDIS: "test-be-lb"
 
+##################################################################
+#### Application Release Automation Resources
+##################################################################
+
+# Set app version seed
+  - name: seed_version_app
+    type: version
+    versionTemplate:
+      versionName: "1.0.0"
+
+# REPO of BVT Automation scripts
+  - name: bvt_repo
+    type: gitRepo
+    integration: "demo_github"
+    versionTemplate:
+      sourceName: "aye0aye/test"
+      branch: master
+
+# SIT env vars
+  - name: bvt_params
+    type: params
+    versionTemplate:
+      params:
+        API_URL: "54.158.18.50:8080"
+        API_TOKEN: "NA"
+
+###################################################################
+##### ECS Test Resources
+###################################################################
+#
+## App TEST env vars
+#  - name: ecs_test_params_app
+#    type: params
+#    versionTemplate:
+#      params:
+#        ENVIRONMENT: "TEST"
+#        PORT: 80
+
 #---------------------------------------------------------------#
 #---------------------------  Test Jobs  -----------------------#
 #---------------------------------------------------------------#
 
 jobs:
-########################### Google Cloud Kubernetes Jobs ########################
+
+##################################################################
+#### GKE App Test Jobs
+##################################################################
 # BE App Create Template
   - name: appBETemp
     type: manifest
@@ -142,60 +156,27 @@ jobs:
       - test
 
 # Test LB Provision
-  - name: prov_test_lb
+  - name: provGKETestLB
     type: provision
     dependencyMode: strict
     steps:
-      - IN: test_be_lb
-      - IN: test_fe_lb
+      - IN: gke_test_be_lb
+      - IN: gke_test_fe_lb
       - IN: deployGKEAppTest
     flags:
       - gke
       - test
 
-########################### AWS ECS Jobs ########################
-# Trigger TEST Release
-  - name: release_beta_app
-    type: release
-    steps:
-      - IN: manifest_app
-      - IN: seed_version_app
-      - TASK: managed
-        bump: beta
-    flags:
-      - ecs
-      - test
-
-# Deploy to TEST environment
-  - name: deploy_test_app
-    type: deploy
-    dependencyMode: strict
-    triggerMode: parallel
-    steps:
-      - IN: release_beta_app
-        deployName: test_app
-      - IN: test_params_app
-        switch: off
-#      - IN: test_env_ecs
-#        switch: off
-#      - IN: e2eshipdemo-alb-test
-#        applyTo:
-#          - manifest: manifest_app
-#            image: ecr_img_app
-#            port: 80
-      - TASK: managed
-    flags:
-      - ecs
-      - test
-
-# Run Build Verification Tests
+##################################################################
+####  App Build Verification Tests
+##################################################################
   - name: auto_bvt
     type: runSh
     dependencyMode: strict
     triggerMode: parallel
     steps:
-      - IN: deploy_test_app
-      - IN: prov_test_lb
+#      - IN: deployECSAppTest
+      - IN: provGKETestLB
         switch: off
       - IN: bvt_repo
         switch: off
@@ -210,3 +191,40 @@ jobs:
             - popd
     flags:
       - test
+
+###################################################################
+##### AWS ECS App Test Jobs
+###################################################################
+## Trigger TEST Release
+#  - name: release_beta_app
+#    type: release
+#    steps:
+#      - IN: manifest_app
+#      - IN: seed_version_app
+#      - TASK: managed
+#        bump: beta
+#    flags:
+#      - ecs
+#      - test
+#
+## Deploy to TEST environment
+#  - name: deployECSAppTest
+#    type: deploy
+#    dependencyMode: strict
+#    triggerMode: parallel
+#    steps:
+#      - IN: release_beta_app
+#        deployName: test_app
+#      - IN: ecs_test_params_app
+#        switch: off
+##      - IN: test_env_ecs
+##        switch: off
+##      - IN: e2eshipdemo-alb-test
+##        applyTo:
+##          - manifest: manifest_app
+##            image: ecr_img_app
+##            port: 80
+#      - TASK: managed
+#    flags:
+#      - ecs
+#      - test
