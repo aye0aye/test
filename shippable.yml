@@ -189,7 +189,7 @@ jobs:
             - export FE_IMG=$(shipctl get_resource_version_key dh_img_app_fe sourceName)
             - export FE_TAG=$(shipctl get_resource_version_name dh_img_app_fe)
             - shipctl replace ./deploys/values.yaml
-            - helm upgrade --install $APP_VERSION ./deploys
+            - helm upgrade --install --force $APP_VERSION ./deploys
             - popd
       - OUT: in_test_be_img
         replicate: dh_img_app_be
