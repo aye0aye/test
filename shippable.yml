@@ -14,6 +14,58 @@ resources:
     pointer:
       region: "us-west1-a"
 
+# Docker Image
+  - name: in_test_fe_img
+    type: image
+    integration: demo_dh # replace with your integration name
+    versionTemplate:
+      sourceName: "aye0aye/dh_img_app_fe" # replace with your Hub URL
+      isPull: false
+      versionName: latest
+
+# Docker Image
+  - name: in_test_be_img
+    type: image
+    integration: demo_dh # replace with your integration name
+    versionTemplate:
+      sourceName: "aye0aye/dh_img_app_fe" # replace with your Hub URL
+      isPull: false
+      versionName: latest
+
+# Docker Image
+  - name: validated_fe_img
+    type: image
+    integration: demo_dh # replace with your integration name
+    versionTemplate:
+      sourceName: "aye0aye/dh_img_app_fe" # replace with your Hub URL
+      isPull: false
+      versionName: latest
+
+# Docker Image
+  - name: validated_be_img
+    type: image
+    integration: demo_dh # replace with your integration name
+    versionTemplate:
+      sourceName: "aye0aye/dh_img_app_fe" # replace with your Hub URL
+      isPull: false
+      versionName: latest
+
+# REPO of BVT Automation scripts
+  - name: bvt_repo
+    type: gitRepo
+    integration: "demo_github"
+    versionTemplate:
+      sourceName: "aye0aye/test"
+      branch: master
+
+# SIT env vars
+  - name: bvt_params
+    type: params
+    versionTemplate:
+      params:
+        API_URL: "54.158.18.50:8080"
+        API_TOKEN: "NA"
+
 ###################################################################
 ##### GKE Test Managed Deploy Resources
 ###################################################################
@@ -82,22 +134,6 @@ resources:
 #### BVT Resources
 ##################################################################
 
-# REPO of BVT Automation scripts
-  - name: bvt_repo
-    type: gitRepo
-    integration: "demo_github"
-    versionTemplate:
-      sourceName: "aye0aye/test"
-      branch: master
-
-# SIT env vars
-  - name: bvt_params
-    type: params
-    versionTemplate:
-      params:
-        API_URL: "54.158.18.50:8080"
-        API_TOKEN: "NA"
-
 ###################################################################
 ##### ECS Test Resources
 ###################################################################
@@ -114,85 +150,6 @@ resources:
 #---------------------------  Test Jobs  -----------------------#
 #---------------------------------------------------------------#
 jobs:
-
-##################################################################
-#### GKE App Test Managed Jobs
-##################################################################
-## BE App Create Template
-#  - name: appBETemp
-#    type: manifest
-#    dependencyMode: strict
-#    steps:
-#      - IN: dh_img_app_be
-#      - IN: test_be_options
-#      - TASK: managed
-#    flags:
-#      - gke
-#      - cd
-#
-## FE App Create Template
-#  - name: appFETemp
-#    type: manifest
-#    dependencyMode: strict
-#    steps:
-#      - IN: dh_img_app_fe
-#      - IN: test_fe_params
-#      - IN: test_fe_options
-#      - TASK: managed
-#    flags:
-#      - gke
-#      - cd
-
-## Test Env Deploy
-#  - name: deployGKEAppTest
-#    type: deploy
-#    method: replace
-#    dependencyMode: strict
-#    steps:
-#      - IN: appBETemp
-#      - IN: appFETemp
-#      - IN: gke_cluster
-#      - TASK: managed
-#    flags:
-#      - gke
-#      - cd
-#
-## Test LB Provision
-#  - name: provGKETestLB
-#    type: provision
-#    dependencyMode: strict
-#    steps:
-#      - IN: gke_test_be_lb
-#      - IN: gke_test_fe_lb
-#      - IN: deployGKEAppTest
-#    flags:
-#      - gke
-#      - cd
-
-###################################################################
-#####  App Build Verification Tests
-###################################################################
-#  - name: auto_bvt
-#    type: runSh
-#    dependencyMode: strict
-#    triggerMode: parallel
-#    steps:
-##      - IN: deployECSAppTest
-#      - IN: provGKETestLB
-#      - IN: bvt_repo
-#        switch: off
-#      - IN: bvt_params
-#        switch: off
-#      - TASK:
-#          script:
-#            - pushd $(shipctl get_resource_state "bvt_repo")
-#            - echo "Starting Testing Env setup"
-#            - npm install
-#            - multi="xunit=shippable/testresults/test.xml json=shippable/testresults/test.json" npm run-script test-core
-#            - echo "Completed Testing Env setup"
-#            - popd
-#    flags:
-#      - cd
 
 ##################################################################
 #### GKE App Test with Kubectl Jobs
@@ -314,6 +271,10 @@ jobs:
             - shipctl replace ./deploys/values.yaml
             - helm upgrade --install latest ./deploys
             - popd
+      - OUT: in_test_be_img
+        replicate: dh_img_app_be
+      - OUT: in_test_fe_img
+        replicate: dh_img_app_fe
     flags:
       - gke
       - cd
@@ -356,6 +317,93 @@ jobs:
     flags:
       - gke
       - cd
+
+###################################################################
+#####  App Build Verification Tests
+###################################################################
+#  - name: auto_bvt
+#    type: runSh
+#    dependencyMode: strict
+#    triggerMode: parallel
+#    steps:
+##      - IN: deployECSAppTest
+#      - IN: provGKETestLB
+#      - IN: bvt_repo
+#        switch: off
+#      - IN: bvt_params
+#        switch: off
+#      - IN: in_test_be_img
+#        switch: off
+#      - IN: in_test_be_img
+#        switch: off
+#      - TASK:
+#          script:
+#            - pushd $(shipctl get_resource_state "bvt_repo")
+#            - echo "Starting Testing Env setup"
+#            - npm install
+#            - multi="xunit=shippable/testresults/test.xml json=shippable/testresults/test.json" npm run-script test-core
+#            - echo "Completed Testing Env setup"
+#            - popd
+#      - OUT: validated_be_img
+#        replicate: in_test_be_img
+#      - OUT: validated_fe_img
+#        replicate: in_test_be_img
+#    flags:
+#      - cd
+
+##################################################################
+#### GKE App Test Managed Jobs
+##################################################################
+## BE App Create Template
+#  - name: appBETemp
+#    type: manifest
+#    dependencyMode: strict
+#    steps:
+#      - IN: dh_img_app_be
+#      - IN: test_be_options
+#      - TASK: managed
+#    flags:
+#      - gke
+#      - cd
+#
+## FE App Create Template
+#  - name: appFETemp
+#    type: manifest
+#    dependencyMode: strict
+#    steps:
+#      - IN: dh_img_app_fe
+#      - IN: test_fe_params
+#      - IN: test_fe_options
+#      - TASK: managed
+#    flags:
+#      - gke
+#      - cd
+
+## Test Env Deploy
+#  - name: deployGKEAppTest
+#    type: deploy
+#    method: replace
+#    dependencyMode: strict
+#    steps:
+#      - IN: appBETemp
+#      - IN: appFETemp
+#      - IN: gke_cluster
+#      - TASK: managed
+#    flags:
+#      - gke
+#      - cd
+#
+## Test LB Provision
+#  - name: provGKETestLB
+#    type: provision
+#    dependencyMode: strict
+#    steps:
+#      - IN: gke_test_be_lb
+#      - IN: gke_test_fe_lb
+#      - IN: deployGKEAppTest
+#    flags:
+#      - gke
+#      - cd
 
 ###################################################################
 ##### AWS ECS App Test Jobs
