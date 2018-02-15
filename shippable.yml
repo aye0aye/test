@@ -140,31 +140,31 @@ jobs:
       - gke
       - cd
 
-# Test Env Deploy
-  - name: deployGKEAppTest
-    type: deploy
-    method: replace
-    dependencyMode: strict
-    steps:
-      - IN: appBETemp
-      - IN: appFETemp
-      - IN: gke_cluster
-      - TASK: managed
-    flags:
-      - gke
-      - cd
-
-# Test LB Provision
-  - name: provGKETestLB
-    type: provision
-    dependencyMode: strict
-    steps:
-      - IN: gke_test_be_lb
-      - IN: gke_test_fe_lb
-      - IN: deployGKEAppTest
-    flags:
-      - gke
-      - cd
+## Test Env Deploy
+#  - name: deployGKEAppTest
+#    type: deploy
+#    method: replace
+#    dependencyMode: strict
+#    steps:
+#      - IN: appBETemp
+#      - IN: appFETemp
+#      - IN: gke_cluster
+#      - TASK: managed
+#    flags:
+#      - gke
+#      - cd
+#
+## Test LB Provision
+#  - name: provGKETestLB
+#    type: provision
+#    dependencyMode: strict
+#    steps:
+#      - IN: gke_test_be_lb
+#      - IN: gke_test_fe_lb
+#      - IN: deployGKEAppTest
+#    flags:
+#      - gke
+#      - cd
 
 ###################################################################
 #####  App Build Verification Tests
