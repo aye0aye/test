@@ -303,7 +303,7 @@ jobs:
             - gcloud container clusters get-credentials $CLUST --zone $CLUST_REG
             - which helm
             - helm init
-            - helm upgrade --install ./helmCharts
+            - helm upgrade --install v0.0.1 ./helmCharts
             - popd
     flags:
       - gke
