@@ -207,13 +207,9 @@ jobs:
             - gcloud container clusters get-credentials $CLUST --zone $CLUST_REG
             - kubectl delete deployment $FE_LABEL 2>/dev/null || echo ""
             - kubectl delete deployment $BE_LABEL 2>/dev/null || echo ""
-            - kubectl delete deployment rc-deploy-prod-vote-app-b593c89e-095b-4f2b-9ef0-b5f9f3d1f4b9 2>/dev/null || echo ""
-            - kubectl delete deployment rc-deploy-prod-vote-app-e5426832-6f81-4690-8fdc-3d3e3509ffca 2>/dev/null || echo ""
-            - kubectl delete deployment rc-deploy-test-vote-app-73f565f7-a7a9-4854-9d3a-8c897bd7b61e 2>/dev/null || echo ""
-            - kubectl delete deployment rc-deploy-test-vote-app-f44959ec-936e-48cd-8289-ce7c0027b70a 2>/dev/null || echo ""
-            - kubectl create -o json -f ./bePod.yml >> kube_output.json
-            - kubectl create -o json -f ./fePod.yml >> kube_output.json
-            - cat kube_output.json
+#            - kubectl create -o json -f ./bePod.yml >> kube_output.json
+#            - kubectl create -o json -f ./fePod.yml >> kube_output.json
+#            - cat kube_output.json
             - popd
     flags:
       - gke
