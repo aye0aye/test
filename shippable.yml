@@ -175,8 +175,8 @@ jobs:
       - gke
       - cd
 
-# Test Provision with kubectl
-  - name: provGKETestKubectl
+# Test Deploy app with kubectl
+  - name: deployGKETestAppKubectl
     type: runSh
     dependencyMode: strict
     steps:
@@ -201,19 +201,51 @@ jobs:
             - export FE_TAG=$(shipctl get_resource_version_name dh_img_app_fe)
             - cp bePod.yml.template bePod.yml
             - cp fePod.yml.template fePod.yml
-            - cp beSvc.yml.template beSvc.yml
-            - cp feSvc.yml.template feSvc.yml
             - shipctl replace bePod.yml fePod.yml beSvc.yml feSvc.yml
             - export CLUST=$(shipctl get_resource_version_key gke_cluster sourceName)
             - export CLUST_REG=$(shipctl get_resource_version_key gke_cluster region)
             - gcloud container clusters get-credentials $CLUST --zone $CLUST_REG
             - kubectl delete deployment $FE_LABEL 2>/dev/null || echo ""
             - kubectl delete deployment $BE_LABEL 2>/dev/null || echo ""
+            - kubectl delete deployment rc-deploy-prod-vote-app-b593c89e-095b-4f2b-9ef0-b5f9f3d1f4b9 2>/dev/null || echo ""
+            - kubectl delete deployment rc-deploy-prod-vote-app-e5426832-6f81-4690-8fdc-3d3e3509ffca 2>/dev/null || echo ""
+            - kubectl delete deployment rc-deploy-test-vote-app-73f565f7-a7a9-4854-9d3a-8c897bd7b61e 2>/dev/null || echo ""
+            - kubectl delete deployment rc-deploy-test-vote-app-f44959ec-936e-48cd-8289-ce7c0027b70a 2>/dev/null || echo ""
+            - kubectl create -o json -f ./bePod.yml >> kube_output.json
+            - kubectl create -o json -f ./fePod.yml >> kube_output.json
+            - cat kube_output.json
+            - popd
+    flags:
+      - gke
+      - cd
+
+  - name: provGKETestLBKubectl
+    type: runSh
+    dependencyMode: strict
+    steps:
+      - IN: deployGKETestAppKubectl
+      - IN: gcloud_cli
+      - IN: gke_cluster
+      - IN: bvt_repo
+        switch: off
+      - TASK:
+          runtime:
+            options:
+              env:
+                - FE_LABEL: "kctl-fe-test"
+                - BE_LABEL: "kctl-be-test"
+          script:
+            - pushd $(shipctl get_resource_state "bvt_repo")
+            - cd kubeSpecs
+            - cp beSvc.yml.template beSvc.yml
+            - cp feSvc.yml.template feSvc.yml
+            - shipctl replace beSvc.yml feSvc.yml
+            - export CLUST=$(shipctl get_resource_version_key gke_cluster sourceName)
+            - export CLUST_REG=$(shipctl get_resource_version_key gke_cluster region)
+            - gcloud container clusters get-credentials $CLUST --zone $CLUST_REG
             - kubectl delete service $FE_LABEL 2>/dev/null || echo ""
             - kubectl delete service $BE_LABEL 2>/dev/null || echo ""
-            - kubectl create -o json -f ./bePod.yml >> kube_output.json
             - kubectl create -o json -f ./beSvc.yml >> kube_output.json
-            - kubectl create -o json -f ./fePod.yml >> kube_output.json
             - kubectl create -o json -f ./feSvc.yml >> kube_output.json
             - cat kube_output.json
             - popd
