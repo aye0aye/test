@@ -75,15 +75,6 @@ resources:
       params:
         REDIS: "test-be-lb"
 
-## Kubectl prvisioningparams
-#  - name: kubectl_prov_params
-#    type: params
-#    version:
-#      params:
-#        FE_LABEL: "kctl-fe-test"
-#        BE_LABEL: "kctl-be-test"
-
-
 ##################################################################
 #### BVT Resources
 ##################################################################
@@ -122,7 +113,7 @@ resources:
 jobs:
 
 ##################################################################
-#### GKE App Test Jobs
+#### GKE App Test Managed Jobs
 ##################################################################
 # BE App Create Template
   - name: appBETemp
@@ -175,6 +166,34 @@ jobs:
       - gke
       - cd
 
+##################################################################
+####  App Build Verification Tests
+##################################################################
+  - name: auto_bvt
+    type: runSh
+    dependencyMode: strict
+    triggerMode: parallel
+    steps:
+#      - IN: deployECSAppTest
+      - IN: provGKETestLB
+      - IN: bvt_repo
+        switch: off
+      - IN: bvt_params
+        switch: off
+      - TASK:
+          script:
+            - pushd $(shipctl get_resource_state "bvt_repo")
+            - echo "Starting Testing Env setup"
+            - npm install
+            - multi="xunit=shippable/testresults/test.xml json=shippable/testresults/test.json" npm run-script test-core
+            - echo "Completed Testing Env setup"
+            - popd
+    flags:
+      - cd
+
+##################################################################
+#### GKE App Test with Kubectl Jobs
+##################################################################
 # Test Deploy app with kubectl
   - name: deployGKETestAppKubectl
     type: runSh
@@ -252,28 +271,41 @@ jobs:
       - cd
 
 ##################################################################
-####  App Build Verification Tests
+#### GKE App Test Helm Jobs
 ##################################################################
-  - name: auto_bvt
+# Test Deploy app with helm
+  - name: deployGKETestAppHelm
     type: runSh
     dependencyMode: strict
-    triggerMode: parallel
     steps:
-#      - IN: deployECSAppTest
-      - IN: provGKETestLB
+      - IN: gcloud_cli
+      - IN: dh_img_app_be
+      - IN: dh_img_app_fe
+      - IN: gke_cluster
       - IN: bvt_repo
         switch: off
-      - IN: bvt_params
-        switch: off
       - TASK:
+          runtime:
+            options:
+              env:
+                - ENVIRONMENT: "test"
           script:
             - pushd $(shipctl get_resource_state "bvt_repo")
-            - echo "Starting Testing Env setup"
-            - npm install
-            - multi="xunit=shippable/testresults/test.xml json=shippable/testresults/test.json" npm run-script test-core
-            - echo "Completed Testing Env setup"
+            - cd helmCharts
+            - export BE_IMG=$(shipctl get_resource_version_key dh_img_app_be sourceName)
+            - export BE_TAG=$(shipctl get_resource_version_name dh_img_app_be)
+            - export FE_IMG=$(shipctl get_resource_version_key dh_img_app_fe sourceName)
+            - export FE_TAG=$(shipctl get_resource_version_name dh_img_app_fe)
+            - cp bePod.yml.template bePod.yml
+            - cp fePod.yml.template fePod.yml
+            - shipctl replace values.yaml
+            - cat values.yaml
+            - export CLUST=$(shipctl get_resource_version_key gke_cluster sourceName)
+            - export CLUST_REG=$(shipctl get_resource_version_key gke_cluster region)
+            - gcloud container clusters get-credentials $CLUST --zone $CLUST_REG
             - popd
     flags:
+      - gke
       - cd
 
 ###################################################################
