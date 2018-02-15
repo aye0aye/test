@@ -229,7 +229,7 @@ jobs:
             - export BE_LABEL=$TOOLSET"-be-"$ENVIRONMENT
             - export APP_VERSION=latest
             - shipctl replace ./services/values.yaml
-            - helm upgrade --install $APP_VERSION ./services
+            - helm upgrade --install --force $APP_VERSION ./services
             - popd
     flags:
       - gke
