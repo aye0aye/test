@@ -296,8 +296,6 @@ jobs:
             - export BE_TAG=$(shipctl get_resource_version_name dh_img_app_be)
             - export FE_IMG=$(shipctl get_resource_version_key dh_img_app_fe sourceName)
             - export FE_TAG=$(shipctl get_resource_version_name dh_img_app_fe)
-            - cp bePod.yml.template bePod.yml
-            - cp fePod.yml.template fePod.yml
             - shipctl replace values.yaml
             - cat values.yaml
             - export CLUST=$(shipctl get_resource_version_key gke_cluster sourceName)
