@@ -209,11 +209,13 @@ jobs:
           runtime:
             options:
               env:
-                - FE_LABEL: "kctl-fe-test"
-                - BE_LABEL: "kctl-be-test"
+                - ENVIRONMENT: "test"
+                - TOOLSET: "kctl"
           script:
             - pushd $(shipctl get_resource_state "bvt_repo")
             - cd kubeSpecs
+            - export FE_LABEL=$TOOLSET"-fe-"$ENVIRONMENT
+            - export BE_LABEL=$TOOLSET"-be-"$ENVIRONMENT
             - export BE_IMG=$(shipctl get_resource_version_key dh_img_app_be sourceName)
             - export BE_TAG=$(shipctl get_resource_version_name dh_img_app_be)
             - export FE_IMG=$(shipctl get_resource_version_key dh_img_app_fe sourceName)
@@ -249,11 +251,13 @@ jobs:
           runtime:
             options:
               env:
-                - FE_LABEL: "kctl-fe-test"
-                - BE_LABEL: "kctl-be-test"
+                - ENVIRONMENT: "test"
+                - TOOLSET: "kctl"
           script:
             - pushd $(shipctl get_resource_state "bvt_repo")
             - cd kubeSpecs
+            - export FE_LABEL=$TOOLSET"-fe-"$ENVIRONMENT
+            - export BE_LABEL=$TOOLSET"-be-"$ENVIRONMENT
             - cp beSvc.yml.template beSvc.yml
             - cp feSvc.yml.template feSvc.yml
             - shipctl replace beSvc.yml feSvc.yml
@@ -289,21 +293,24 @@ jobs:
             options:
               env:
                 - ENVIRONMENT: "test"
+                - TOOLSET: "helm"
           script:
             - pushd $(shipctl get_resource_state "bvt_repo")
-            - cd helmCharts
-            - export BE_IMG=$(shipctl get_resource_version_key dh_img_app_be sourceName)
-            - export BE_TAG=$(shipctl get_resource_version_name dh_img_app_be)
-            - export FE_IMG=$(shipctl get_resource_version_key dh_img_app_fe sourceName)
-            - export FE_TAG=$(shipctl get_resource_version_name dh_img_app_fe)
-            - shipctl replace values.yaml
-            - cat values.yaml
             - export CLUST=$(shipctl get_resource_version_key gke_cluster sourceName)
             - export CLUST_REG=$(shipctl get_resource_version_key gke_cluster region)
             - gcloud container clusters get-credentials $CLUST --zone $CLUST_REG
             - which helm
             - helm init
-            - helm upgrade --install latest .
+            - cd helmCharts
+            - export FE_LABEL=$TOOLSET"-fe-"$ENVIRONMENT
+            - export BE_LABEL=$TOOLSET"-be-"$ENVIRONMENT
+            - export BE_IMG=$(shipctl get_resource_version_key dh_img_app_be sourceName)
+            - export BE_TAG=$(shipctl get_resource_version_name dh_img_app_be)
+            - export FE_IMG=$(shipctl get_resource_version_key dh_img_app_fe sourceName)
+            - export FE_TAG=$(shipctl get_resource_version_name dh_img_app_fe)
+            - shipctl replace ./deploys/values.yaml
+            - cat ./deploys/values.yaml
+            - helm upgrade --install latest ./deploys
             - popd
     flags:
       - gke

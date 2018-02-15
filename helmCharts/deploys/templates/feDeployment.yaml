@@ -1,9 +1,9 @@
 apiVersion: apps/v1beta1
 kind: Deployment
 metadata:
-  name: {{ .Chart.Name }}-fe-{{ .Values.environment }}
+  name: {{ .Values.fe.label }}
 spec:
-  replicas: {{ .Values.fe.replicaCount}}
+  replicas: {{ .Values.fe.replicaCount }}
   revisionHistoryLimit: 10
   strategy:
     rollingUpdate:
@@ -13,10 +13,10 @@ spec:
   template:
     metadata:
       labels:
-        app: {{ .Chart.Name }}-fe-{{ .Values.environment }}
+        app: {{ .Values.fe.label }}
     spec:
       containers:
-      - name: {{ .Chart.Name }}-fe-{{ .Values.environment }}
+      - name: {{ .Values.fe.label }}
         image: {{ .Values.fe.image.repo }}:{{ .Values.fe.image.tag }}
         ports:
         - containerPort: {{ .Values.fe.port }}
@@ -27,4 +27,4 @@ spec:
             cpu: {{ .Values.fe.resources.limits.cpu }}
         env:
         - name: REDIS
-          value: {{ .Values.fe.image.repo }}:{{ .Values.fe.image.tag }}
+          value: {{ .Values.fe.label }}

@@ -1,6 +1,7 @@
 environment: ${ENVIRONMENT}
 
 be:
+  label: ${BE_LABEL}
   replicaCount: 1
   image:
     repo: ${BE_IMG}
@@ -8,6 +9,7 @@ be:
   port: 6379
 
 fe:
+  label: ${FE_LABEL}
   replicaCount: 1
   image:
     repo: ${FE_IMG}

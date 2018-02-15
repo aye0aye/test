@@ -1,17 +1,17 @@
 apiVersion: apps/v1beta1
 kind: Deployment
 metadata:
-  name: {{ .Chart.Name }}-be-{{ .Values.environment }}
+  name: {{ .Values.be.label }}
 spec:
-  replicas: {{ .Values.be.replicaCount}}
+  replicas: {{ .Values.be.replicaCount }}
   revisionHistoryLimit: 10
   template:
     metadata:
       labels:
-        app: {{ .Chart.Name }}-be-{{ .Values.environment }}
+        app: {{ .Values.be.label }}
     spec:
       containers:
-      - name: {{ .Chart.Name }}-be-{{ .Values.environment }}
+      - name: {{ .Values.be.label }}
         image: {{ .Values.be.image.repo }}:{{ .Values.be.image.tag }}
         ports:
         - containerPort: {{ .Values.be.port }}
