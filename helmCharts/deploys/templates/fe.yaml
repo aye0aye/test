@@ -21,12 +21,12 @@ spec:
       - name: {{ .Values.fe.label }}
         image: {{ .Values.fe.image.repo }}:{{ .Values.fe.image.tag }}
         ports:
-        - containerPort: {{ .Values.fe.port }}
+        - containerPort: "{{ .Values.fe.port }}"
         resources:
           requests:
-            cpu: {{ .Values.fe.resources.requests.cpu }}
+            cpu: "{{ .Values.fe.resources.requests.cpu }}"
           limits:
-            cpu: {{ .Values.fe.resources.limits.cpu }}
+            cpu: "{{ .Values.fe.resources.limits.cpu }}"
         env:
         - name: REDIS
           value: {{ .Values.fe.label }}

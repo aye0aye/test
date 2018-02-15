@@ -1,11 +1,11 @@
 apiVersion: v1
 kind: Service
 metadata:
-  namespace: "{{ .Values.environment }}"
-  name: "{{ .Values.fe.label }}"
+  namespace: {{ .Values.environment }}
+  name: {{ .Values.fe.label }}
 spec:
   type: LoadBalancer
   ports:
   - port: "{{ .Values.fe.port }}"
   selector:
-    app: "{{ .Values.fe.label }}"
+    app: {{ .Values.fe.label }}
