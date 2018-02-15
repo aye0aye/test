@@ -335,7 +335,7 @@ jobs:
         switch: off
       - IN: in_test_be_img
         switch: off
-      - IN: in_test_be_img
+      - IN: in_test_fe_img
         switch: off
       - TASK:
           script:
@@ -348,7 +348,7 @@ jobs:
       - OUT: validated_be_img
         replicate: in_test_be_img
       - OUT: validated_fe_img
-        replicate: in_test_be_img
+        replicate: in_test_fe_img
     flags:
       - cd
 
