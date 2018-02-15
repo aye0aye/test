@@ -186,8 +186,8 @@ jobs:
             - gcloud container clusters get-credentials $CLUST --zone $CLUST_REG
             - kubectl delete deployment $FE_LABEL 2>/dev/null || echo ""
             - kubectl delete deployment $BE_LABEL 2>/dev/null || echo ""
-            - kubectl create -o json -f ./prodName.yml >> kube_output.json
-            - kubectl create -o json -f ./testName.yml >> kube_output.json
+#            - kubectl create -o json -f ./prodName.yml >> kube_output.json
+#            - kubectl create -o json -f ./testName.yml >> kube_output.json
             - kubectl create -o json -f ./beDeploy.yml >> kube_output.json
             - kubectl create -o json -f ./feDeploy.yml >> kube_output.json
             - cat kube_output.json
