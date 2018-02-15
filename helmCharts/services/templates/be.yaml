@@ -5,6 +5,6 @@ metadata:
   name: {{ .Values.be.label }}
 spec:
   ports:
-  - port: "{{ .Values.be.port }}"
+  - port: {{ .Values.be.port }}
   selector:
     app: {{ .Values.be.label }}

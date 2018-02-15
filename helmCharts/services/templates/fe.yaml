@@ -6,6 +6,6 @@ metadata:
 spec:
   type: LoadBalancer
   ports:
-  - port: "{{ .Values.fe.port }}"
+  - port: {{ .Values.fe.port }}
   selector:
     app: {{ .Values.fe.label }}
