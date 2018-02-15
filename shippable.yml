@@ -178,7 +178,7 @@ jobs:
             - export CLUST_REG=$(shipctl get_resource_version_key gke_cluster region)
             - gcloud container clusters get-credentials $CLUST --zone $CLUST_REG
             - which helm
-            - helm reset -f
+#            - helm reset -f
             - helm init
             - helm delete --purge $APP_VERSION
 #            - cd helmCharts
