@@ -166,30 +166,30 @@ jobs:
       - gke
       - cd
 
-##################################################################
-####  App Build Verification Tests
-##################################################################
-  - name: auto_bvt
-    type: runSh
-    dependencyMode: strict
-    triggerMode: parallel
-    steps:
-#      - IN: deployECSAppTest
-      - IN: provGKETestLB
-      - IN: bvt_repo
-        switch: off
-      - IN: bvt_params
-        switch: off
-      - TASK:
-          script:
-            - pushd $(shipctl get_resource_state "bvt_repo")
-            - echo "Starting Testing Env setup"
-            - npm install
-            - multi="xunit=shippable/testresults/test.xml json=shippable/testresults/test.json" npm run-script test-core
-            - echo "Completed Testing Env setup"
-            - popd
-    flags:
-      - cd
+###################################################################
+#####  App Build Verification Tests
+###################################################################
+#  - name: auto_bvt
+#    type: runSh
+#    dependencyMode: strict
+#    triggerMode: parallel
+#    steps:
+##      - IN: deployECSAppTest
+#      - IN: provGKETestLB
+#      - IN: bvt_repo
+#        switch: off
+#      - IN: bvt_params
+#        switch: off
+#      - TASK:
+#          script:
+#            - pushd $(shipctl get_resource_state "bvt_repo")
+#            - echo "Starting Testing Env setup"
+#            - npm install
+#            - multi="xunit=shippable/testresults/test.xml json=shippable/testresults/test.json" npm run-script test-core
+#            - echo "Completed Testing Env setup"
+#            - popd
+#    flags:
+#      - cd
 
 ##################################################################
 #### GKE App Test with Kubectl Jobs
