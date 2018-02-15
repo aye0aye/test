@@ -264,12 +264,13 @@ jobs:
             - cd helmCharts
             - export FE_LABEL=$TOOLSET"-fe-"$ENVIRONMENT
             - export BE_LABEL=$TOOLSET"-be-"$ENVIRONMENT
+            - export APP_VERSION=latest
             - export BE_IMG=$(shipctl get_resource_version_key dh_img_app_be sourceName)
             - export BE_TAG=$(shipctl get_resource_version_name dh_img_app_be)
             - export FE_IMG=$(shipctl get_resource_version_key dh_img_app_fe sourceName)
             - export FE_TAG=$(shipctl get_resource_version_name dh_img_app_fe)
             - shipctl replace ./deploys/values.yaml
-            - helm upgrade --install latest ./deploys
+            - helm upgrade --install $APP_VERSION ./deploys
             - popd
       - OUT: in_test_be_img
         replicate: dh_img_app_be
@@ -307,49 +308,49 @@ jobs:
             - cd helmCharts
             - export FE_LABEL=$TOOLSET"-fe-"$ENVIRONMENT
             - export BE_LABEL=$TOOLSET"-be-"$ENVIRONMENT
+            - export APP_VERSION=latest
             - export BE_IMG=$(shipctl get_resource_version_key dh_img_app_be sourceName)
             - export BE_TAG=$(shipctl get_resource_version_name dh_img_app_be)
             - export FE_IMG=$(shipctl get_resource_version_key dh_img_app_fe sourceName)
             - export FE_TAG=$(shipctl get_resource_version_name dh_img_app_fe)
             - shipctl replace ./services/values.yaml
-            - helm upgrade --install latest ./services
+            - helm upgrade --install $APP_VERSION ./services
             - popd
     flags:
       - gke
       - cd
 
-###################################################################
-#####  App Build Verification Tests
-###################################################################
-#  - name: auto_bvt
-#    type: runSh
-#    dependencyMode: strict
-#    triggerMode: parallel
-#    steps:
-##      - IN: deployECSAppTest
-#      - IN: provGKETestLB
-#      - IN: bvt_repo
-#        switch: off
-#      - IN: bvt_params
-#        switch: off
-#      - IN: in_test_be_img
-#        switch: off
-#      - IN: in_test_be_img
-#        switch: off
-#      - TASK:
-#          script:
-#            - pushd $(shipctl get_resource_state "bvt_repo")
-#            - echo "Starting Testing Env setup"
-#            - npm install
-#            - multi="xunit=shippable/testresults/test.xml json=shippable/testresults/test.json" npm run-script test-core
-#            - echo "Completed Testing Env setup"
-#            - popd
-#      - OUT: validated_be_img
-#        replicate: in_test_be_img
-#      - OUT: validated_fe_img
-#        replicate: in_test_be_img
-#    flags:
-#      - cd
+##################################################################
+####  App Build Verification Tests
+##################################################################
+  - name: auto_bvt
+    type: runSh
+    dependencyMode: strict
+    triggerMode: parallel
+    steps:
+      - IN: deployGKETestLBHelm
+      - IN: bvt_repo
+        switch: off
+      - IN: bvt_params
+        switch: off
+      - IN: in_test_be_img
+        switch: off
+      - IN: in_test_be_img
+        switch: off
+      - TASK:
+          script:
+            - pushd $(shipctl get_resource_state "bvt_repo")
+            - echo "Starting Testing Env setup"
+            - npm install
+            - multi="xunit=shippable/testresults/test.xml json=shippable/testresults/test.json" npm run-script test-core
+            - echo "Completed Testing Env setup"
+            - popd
+      - OUT: validated_be_img
+        replicate: in_test_be_img
+      - OUT: validated_fe_img
+        replicate: in_test_be_img
+    flags:
+      - cd
 
 ##################################################################
 #### GKE App Test Managed Jobs

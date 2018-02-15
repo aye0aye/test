@@ -1,4 +1,5 @@
 environment: ${ENVIRONMENT}
+appVersion: ${APP_VERSION}
 
 be:
   label: ${BE_LABEL}
