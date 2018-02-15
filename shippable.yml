@@ -201,7 +201,7 @@ jobs:
             - export FE_TAG=$(shipctl get_resource_version_name dh_img_app_fe)
             - cp bePod.yml.template bePod.yml
             - cp fePod.yml.template fePod.yml
-            - shipctl replace bePod.yml fePod.yml beSvc.yml feSvc.yml
+            - shipctl replace bePod.yml fePod.yml
             - export CLUST=$(shipctl get_resource_version_key gke_cluster sourceName)
             - export CLUST_REG=$(shipctl get_resource_version_key gke_cluster region)
             - gcloud container clusters get-credentials $CLUST --zone $CLUST_REG
@@ -224,8 +224,11 @@ jobs:
     dependencyMode: strict
     steps:
       - IN: deployGKETestAppKubectl
+        switch: off
       - IN: gcloud_cli
+        switch: off
       - IN: gke_cluster
+        switch: off
       - IN: bvt_repo
         switch: off
       - TASK:
