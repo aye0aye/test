@@ -14,69 +14,69 @@ resources:
     pointer:
       region: "us-west1-a"
 
-##################################################################
-#### GKE Test Managed Deploy Resources
-##################################################################
-# BE Container Options
-  - name: test_be_options
-    type: dockerOptions
-    version:
-      memory: 128
-      portMappings:
-        - "6379:6379/tcp"
-      labels:
-        app: "test_be"
-
-# BE Internal load-balancer
-  - name: gke_test_be_lb
-    type: loadBalancer
-    integration: demo_gke
-    pointer:
-      sourceName: "test-be-lb"
-      method: ClusterIP
-      clusterName: "cluster"
-      region: "us-west1-a"
-    version:
-      ports:
-        - name: testport
-          protocol: TCP
-          port: 6379
-      selector:
-        app: "test_be"
-
-# FE Container Options
-  - name: test_fe_options
-    type: dockerOptions
-    version:
-      memory: 128
-      portMappings:
-        - "80:80/tcp"
-      labels:
-        app: "test_fe"
-
-# FE External load-balancer
-  - name: gke_test_fe_lb
-    type: loadBalancer
-    integration: demo_gke
-    pointer:
-      sourceName: "test-fe-lb"
-      method: LoadBalancer
-      clusterName: "cluster"
-      region: "us-west1-a"
-    version:
-      ports:
-        - name: testport
-          protocol: TCP
-          port: 80
-      selector:
-        app: "test_fe"
-
-# FE Env Vars
-  - name: test_fe_params
-    type: params
-    version:
-      params:
-        REDIS: "test-be-lb"
+###################################################################
+##### GKE Test Managed Deploy Resources
+###################################################################
+## BE Container Options
+#  - name: test_be_options
+#    type: dockerOptions
+#    version:
+#      memory: 128
+#      portMappings:
+#        - "6379:6379/tcp"
+#      labels:
+#        app: "test_be"
+#
+## BE Internal load-balancer
+#  - name: gke_test_be_lb
+#    type: loadBalancer
+#    integration: demo_gke
+#    pointer:
+#      sourceName: "test-be-lb"
+#      method: ClusterIP
+#      clusterName: "cluster"
+#      region: "us-west1-a"
+#    version:
+#      ports:
+#        - name: testport
+#          protocol: TCP
+#          port: 6379
+#      selector:
+#        app: "test_be"
+#
+## FE Container Options
+#  - name: test_fe_options
+#    type: dockerOptions
+#    version:
+#      memory: 128
+#      portMappings:
+#        - "80:80/tcp"
+#      labels:
+#        app: "test_fe"
+#
+## FE External load-balancer
+#  - name: gke_test_fe_lb
+#    type: loadBalancer
+#    integration: demo_gke
+#    pointer:
+#      sourceName: "test-fe-lb"
+#      method: LoadBalancer
+#      clusterName: "cluster"
+#      region: "us-west1-a"
+#    version:
+#      ports:
+#        - name: testport
+#          protocol: TCP
+#          port: 80
+#      selector:
+#        app: "test_fe"
+#
+## FE Env Vars
+#  - name: test_fe_params
+#    type: params
+#    version:
+#      params:
+#        REDIS: "test-be-lb"
 
 ###################################################################
 ##### BVT Resources
