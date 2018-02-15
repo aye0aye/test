@@ -142,8 +142,8 @@ jobs:
             - export CLUST=$(shipctl get_resource_version_key gke_cluster sourceName)
             - export CLUST_REG=$(shipctl get_resource_version_key gke_cluster region)
             - gcloud container clusters get-credentials $CLUST --zone $CLUST_REG
-            - kubectl delete service $FE_LABEL 2>/dev/null || echo ""
-            - kubectl delete service $BE_LABEL 2>/dev/null || echo ""
+            - kubectl delete -f ./beSvc.yml  2>/dev/null || echo ""
+            - kubectl delete -f ./feSvc.yml 2>/dev/null || echo ""
             - kubectl create -o json -f ./beSvc.yml >> kube_output.json
             - kubectl create -o json -f ./feSvc.yml >> kube_output.json
             - cat kube_output.json
