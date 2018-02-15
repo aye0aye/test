@@ -1,7 +1,7 @@
 apiVersion: apps/v1beta1
 kind: Deployment
 metadata:
-  namespace: {{$ENVIRONMENT}}
+  namespace: ${ENVIRONMENT}
   name: ${FE_LABEL}
 spec:
   replicas: 1
