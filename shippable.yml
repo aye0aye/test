@@ -235,37 +235,52 @@ jobs:
       - gke
       - cd
 
-##################################################################
-####  App Build Verification Tests
-##################################################################
-  - name: auto_bvt
-    type: runSh
-    dependencyMode: strict
-    triggerMode: parallel
-    steps:
-      - IN: deployGKETestLBHelm
-      - IN: bvt_repo
-        switch: off
-      - IN: bvt_params
-        switch: off
-      - IN: in_test_be_img
-        switch: off
-      - IN: in_test_fe_img
-        switch: off
-      - TASK:
-          script:
-            - pushd $(shipctl get_resource_state "bvt_repo")
-            - echo "Starting Testing Env setup"
-            - npm install
-            - multi="xunit=shippable/testresults/test.xml json=shippable/testresults/test.json" npm run-script test-core
-            - echo "Completed Testing Env setup"
-            - popd
-      - OUT: validated_be_img
-        replicate: in_test_be_img
-      - OUT: validated_fe_img
-        replicate: in_test_fe_img
-    flags:
-      - cd
+###################################################################
+#####  App Build Verification Tests
+###################################################################
+#  - name: auto_bvt
+#    type: runSh
+#    dependencyMode: strict
+#    triggerMode: parallel
+#    steps:
+#      - IN: deployGKETestLBHelm
+#      - IN: bvt_repo
+#        switch: off
+#      - IN: bvt_params
+#        switch: off
+#      - IN: in_test_be_img
+#        switch: off
+#      - IN: in_test_fe_img
+#        switch: off
+#      - TASK:
+#          script:
+#            - pushd $(shipctl get_resource_state "bvt_repo")
+#            - echo "Starting Testing Env setup"
+#            - npm install
+#            - multi="xunit=shippable/testresults/test.xml json=shippable/testresults/test.json" npm run-script test-core
+#            - echo "Completed Testing Env setup"
+#            - popd
+#      - OUT: validated_be_img
+#        replicate: in_test_be_img
+#      - OUT: validated_fe_img
+#        replicate: in_test_fe_img
+#    flags:
+#      - cd
+#
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
