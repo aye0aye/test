@@ -1,6 +1,7 @@
 apiVersion: apps/v1beta1
 kind: Deployment
 metadata:
+  namespace: {{ .Values.environment }}
   name: {{ .Values.fe.label }}
 spec:
   replicas: {{ .Values.fe.replicaCount }}
@@ -14,6 +15,7 @@ spec:
     metadata:
       labels:
         app: {{ .Values.fe.label }}
+        appVersion: {{ .Values.appVersion }}
     spec:
       containers:
       - name: {{ .Values.fe.label }}
