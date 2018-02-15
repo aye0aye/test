@@ -302,6 +302,7 @@ jobs:
             - export CLUST_REG=$(shipctl get_resource_version_key gke_cluster region)
             - gcloud container clusters get-credentials $CLUST --zone $CLUST_REG
             - which helm
+            - helm init
             - helm upgrade --install ./helmCharts
             - popd
     flags:
