@@ -230,7 +230,7 @@ jobs:
             - export APP_VERSION=latest
             - shipctl replace ./services/values.yaml
             #- helm upgrade --install --force $APP_VERSION ./services
-            - helm delete $APP_VERSION
+            - helm delete --purge $APP_VERSION
             - popd
     flags:
       - gke
