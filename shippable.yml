@@ -4,7 +4,7 @@
 resources:
 
 ##################################################################
-#### GKE Test Resources
+#### GKE Test Shared Resources
 ##################################################################
 
 # gcloud CLI Config
@@ -14,6 +14,9 @@ resources:
     pointer:
       region: "us-west1-a"
 
+##################################################################
+#### GKE Test Managed Deploy Resources
+##################################################################
 # BE Container Options
   - name: test_be_options
     type: dockerOptions
@@ -75,25 +78,25 @@ resources:
       params:
         REDIS: "test-be-lb"
 
-##################################################################
-#### BVT Resources
-##################################################################
-
-# REPO of BVT Automation scripts
-  - name: bvt_repo
-    type: gitRepo
-    integration: "demo_github"
-    versionTemplate:
-      sourceName: "aye0aye/test"
-      branch: master
-
-# SIT env vars
-  - name: bvt_params
-    type: params
-    versionTemplate:
-      params:
-        API_URL: "54.158.18.50:8080"
-        API_TOKEN: "NA"
+###################################################################
+##### BVT Resources
+###################################################################
+#
+## REPO of BVT Automation scripts
+#  - name: bvt_repo
+#    type: gitRepo
+#    integration: "demo_github"
+#    versionTemplate:
+#      sourceName: "aye0aye/test"
+#      branch: master
+#
+## SIT env vars
+#  - name: bvt_params
+#    type: params
+#    versionTemplate:
+#      params:
+#        API_URL: "54.158.18.50:8080"
+#        API_TOKEN: "NA"
 
 ###################################################################
 ##### ECS Test Resources
@@ -115,30 +118,30 @@ jobs:
 ##################################################################
 #### GKE App Test Managed Jobs
 ##################################################################
-# BE App Create Template
-  - name: appBETemp
-    type: manifest
-    dependencyMode: strict
-    steps:
-      - IN: dh_img_app_be
-      - IN: test_be_options
-      - TASK: managed
-    flags:
-      - gke
-      - cd
-
-# FE App Create Template
-  - name: appFETemp
-    type: manifest
-    dependencyMode: strict
-    steps:
-      - IN: dh_img_app_fe
-      - IN: test_fe_params
-      - IN: test_fe_options
-      - TASK: managed
-    flags:
-      - gke
-      - cd
+## BE App Create Template
+#  - name: appBETemp
+#    type: manifest
+#    dependencyMode: strict
+#    steps:
+#      - IN: dh_img_app_be
+#      - IN: test_be_options
+#      - TASK: managed
+#    flags:
+#      - gke
+#      - cd
+#
+## FE App Create Template
+#  - name: appFETemp
+#    type: manifest
+#    dependencyMode: strict
+#    steps:
+#      - IN: dh_img_app_fe
+#      - IN: test_fe_params
+#      - IN: test_fe_options
+#      - TASK: managed
+#    flags:
+#      - gke
+#      - cd
 
 ## Test Env Deploy
 #  - name: deployGKEAppTest
