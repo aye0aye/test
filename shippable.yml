@@ -78,25 +78,25 @@ resources:
 #      params:
 #        REDIS: "test-be-lb"
 
-###################################################################
-##### BVT Resources
-###################################################################
-#
-## REPO of BVT Automation scripts
-#  - name: bvt_repo
-#    type: gitRepo
-#    integration: "demo_github"
-#    versionTemplate:
-#      sourceName: "aye0aye/test"
-#      branch: master
-#
-## SIT env vars
-#  - name: bvt_params
-#    type: params
-#    versionTemplate:
-#      params:
-#        API_URL: "54.158.18.50:8080"
-#        API_TOKEN: "NA"
+##################################################################
+#### BVT Resources
+##################################################################
+
+# REPO of BVT Automation scripts
+  - name: bvt_repo
+    type: gitRepo
+    integration: "demo_github"
+    versionTemplate:
+      sourceName: "aye0aye/test"
+      branch: master
+
+# SIT env vars
+  - name: bvt_params
+    type: params
+    versionTemplate:
+      params:
+        API_URL: "54.158.18.50:8080"
+        API_TOKEN: "NA"
 
 ###################################################################
 ##### ECS Test Resources
