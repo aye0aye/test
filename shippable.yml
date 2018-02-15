@@ -180,16 +180,16 @@ jobs:
             - export BE_TAG=$(shipctl get_resource_version_name dh_img_app_be)
             - export FE_IMG=$(shipctl get_resource_version_key dh_img_app_fe sourceName)
             - export FE_TAG=$(shipctl get_resource_version_name dh_img_app_fe)
-            - cp bePod.yml.template bePod.yml
-            - cp fePod.yml.template fePod.yml
-            - shipctl replace bePod.yml fePod.yml
+            - shipctl replace beDeploy.yml feDeploy.yml
             - export CLUST=$(shipctl get_resource_version_key gke_cluster sourceName)
             - export CLUST_REG=$(shipctl get_resource_version_key gke_cluster region)
             - gcloud container clusters get-credentials $CLUST --zone $CLUST_REG
             - kubectl delete deployment $FE_LABEL 2>/dev/null || echo ""
             - kubectl delete deployment $BE_LABEL 2>/dev/null || echo ""
-            - kubectl create -o json -f ./bePod.yml >> kube_output.json
-            - kubectl create -o json -f ./fePod.yml >> kube_output.json
+            - kubectl create -o json -f ./prodName.yml >> kube_output.json
+            - kubectl create -o json -f ./testName.yml >> kube_output.json
+            - kubectl create -o json -f ./beDeploy.yml >> kube_output.json
+            - kubectl create -o json -f ./feDeploy.yml >> kube_output.json
             - cat kube_output.json
             - popd
     flags:
@@ -218,8 +218,6 @@ jobs:
             - cd kubeSpecs
             - export FE_LABEL=$TOOLSET"-fe-"$ENVIRONMENT
             - export BE_LABEL=$TOOLSET"-be-"$ENVIRONMENT
-            - cp beSvc.yml.template beSvc.yml
-            - cp feSvc.yml.template feSvc.yml
             - shipctl replace beSvc.yml feSvc.yml
             - export CLUST=$(shipctl get_resource_version_key gke_cluster sourceName)
             - export CLUST_REG=$(shipctl get_resource_version_key gke_cluster region)
