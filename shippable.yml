@@ -223,14 +223,13 @@ jobs:
             - gcloud container clusters get-credentials $CLUST --zone $CLUST_REG
             - which helm
             - helm list -a
-#            - helm init
-#            - cd helmCharts
-#            - export FE_LABEL=$TOOLSET"-fe-"$ENVIRONMENT
-#            - export BE_LABEL=$TOOLSET"-be-"$ENVIRONMENT
-#            - export APP_VERSION=latest
-#            - shipctl replace ./services/values.yaml
-#            - helm upgrade --install --namespace $ENVIRONMENT $APP_VERSION ./services
-#            #- helm delete --purge $APP_VERSION
+            - helm init
+            - cd helmCharts
+            - export FE_LABEL=$TOOLSET"-fe-"$ENVIRONMENT
+            - export BE_LABEL=$TOOLSET"-be-"$ENVIRONMENT
+            - export APP_VERSION=latest
+            - shipctl replace ./deploys/Chart.yaml ./deploys/values.yaml
+            - helm upgrade --install --namespace $ENVIRONMENT $APP_VERSION ./services
             - popd
     flags:
       - gke
