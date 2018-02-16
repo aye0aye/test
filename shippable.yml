@@ -182,13 +182,14 @@ jobs:
             - cd helmCharts
             - export FE_LABEL=$TOOLSET"-fe-"$ENVIRONMENT
             - export BE_LABEL=$TOOLSET"-be-"$ENVIRONMENT
+            - export APP_NAME=helm-app-${ENVIRONMENT}
             - export APP_VERSION=latest
             - export BE_IMG=$(shipctl get_resource_version_key dh_img_app_be sourceName)
             - export BE_TAG=$(shipctl get_resource_version_name dh_img_app_be)
             - export FE_IMG=$(shipctl get_resource_version_key dh_img_app_fe sourceName)
             - export FE_TAG=$(shipctl get_resource_version_name dh_img_app_fe)
             - shipctl replace ./deploys/Chart.yaml ./deploys/values.yaml
-            - helm upgrade --install --namespace $ENVIRONMENT $APP_VERSION ./deploys
+            - helm upgrade --install --namespace $ENVIRONMENT $APP_NAME ./deploys
             - popd
       - OUT: in_test_be_img
         replicate: dh_img_app_be
@@ -227,9 +228,10 @@ jobs:
             - cd helmCharts
             - export FE_LABEL=$TOOLSET"-fe-"$ENVIRONMENT
             - export BE_LABEL=$TOOLSET"-be-"$ENVIRONMENT
+            - export APP_NAME=helm-app-${ENVIRONMENT}
             - export APP_VERSION=latest
             - shipctl replace ./services/Chart.yaml ./services/values.yaml
-            - helm upgrade --install --namespace $ENVIRONMENT $APP_VERSION ./services
+            - helm upgrade --install --namespace $ENVIRONMENT $APP_NAME ./services
             - popd
     flags:
       - gke

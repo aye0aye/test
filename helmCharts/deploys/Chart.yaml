@@ -1,4 +1,4 @@
 apiVersion: v1
 description: A Helm chart based deplyoment for Kubernetes
-name: helm-app-${ENVIRONMENT}
+name: ${APP_NAME}
 version: ${APP_VERSION}
