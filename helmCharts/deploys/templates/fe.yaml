@@ -29,4 +29,4 @@ spec:
             cpu: {{ .Values.fe.resources.limits.cpu }}
         env:
         - name: REDIS
-          value: "{{ .Values.be.label }}"
+          value: "{{.Values.be.label}}"
