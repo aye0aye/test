@@ -15,7 +15,6 @@ spec:
     metadata:
       labels:
         app: {{ .Values.fe.label }}
-        appVersion: {{ .Values.appVersion }}
     spec:
       containers:
       - name: {{ .Values.fe.label }}

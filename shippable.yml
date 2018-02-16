@@ -190,6 +190,7 @@ jobs:
             - export FE_TAG=$(shipctl get_resource_version_name dh_img_app_fe)
             - shipctl replace ./deploys/Chart.yaml ./deploys/values.yaml
             - helm upgrade --install --namespace $ENVIRONMENT $APP_NAME ./deploys
+            - shipctl put_resource_state $JOB_NAME versionName $APP_VERSION
             - popd
       - OUT: in_test_be_img
         replicate: dh_img_app_be
@@ -232,6 +233,7 @@ jobs:
             - export APP_VERSION=latest
             - shipctl replace ./services/Chart.yaml ./services/values.yaml
             - helm upgrade --install --namespace $ENVIRONMENT $APP_NAME ./services
+            - shipctl put_resource_state $JOB_NAME versionName $APP_VERSION
             - popd
     flags:
       - gke

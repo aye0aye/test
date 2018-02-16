@@ -10,7 +10,6 @@ spec:
     metadata:
       labels:
         app: {{ .Values.be.label }}
-        appVersion: {{ .Values.appVersion }}
     spec:
       containers:
       - name: {{ .Values.be.label }}
