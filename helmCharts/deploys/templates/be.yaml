@@ -16,4 +16,4 @@ spec:
       - name: {{ .Values.be.label }}
         image: {{ .Values.be.image.repo }}:{{ .Values.be.image.tag }}
         ports:
-        - containerPort: "{{ .Values.be.port }}"
+        - containerPort: {{ .Values.be.port }}
