@@ -230,7 +230,7 @@ jobs:
             - export FE_LABEL=$TOOLSET"-fe-"$ENVIRONMENT
             - export BE_LABEL=$TOOLSET"-be-"$ENVIRONMENT
             - export APP_NAME=$TOOLSET"-lb-"$ENVIRONMENT
-            - export APP_VERSION=latest
+            - export APP_VERSION=$(shipctl get_resource_version_name deployGKETestAppHelm)
             - shipctl replace ./services/Chart.yaml ./services/values.yaml
             - helm upgrade --install --namespace $ENVIRONMENT $APP_NAME ./services
             - shipctl put_resource_state $JOB_NAME versionName $APP_VERSION
