@@ -1,7 +1,7 @@
 apiVersion: apps/v1beta1
 kind: Deployment
 metadata:
-#  namespace: {{ .Values.environment }}
+  namespace: {{ .Values.environment }}
   name: {{ .Values.fe.label }}
 spec:
   replicas: {{ .Values.fe.replicaCount }}
