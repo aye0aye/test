@@ -228,7 +228,7 @@ jobs:
             - export FE_LABEL=$TOOLSET"-fe-"$ENVIRONMENT
             - export BE_LABEL=$TOOLSET"-be-"$ENVIRONMENT
             - export APP_VERSION=latest
-            - shipctl replace ./deploys/Chart.yaml ./deploys/values.yaml
+            - shipctl replace ./services/Chart.yaml ./services/values.yaml
             - helm upgrade --install --namespace $ENVIRONMENT $APP_VERSION ./services
             - popd
     flags:
