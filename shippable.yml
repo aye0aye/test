@@ -115,6 +115,7 @@ jobs:
     flags:
       - gke
       - cd
+      - kubectl
 
   - name: provGKETestLBKubectl
     type: runSh
@@ -151,6 +152,7 @@ jobs:
     flags:
       - gke
       - cd
+      - kubectl
 
 ##################################################################
 #### GKE App Test Helm Jobs
