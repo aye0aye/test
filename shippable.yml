@@ -201,6 +201,7 @@ jobs:
     flags:
       - gke
       - cd
+      - helm
 
 # Test Deploy LB with helm
   - name: deployGKETestLBHelm
@@ -240,6 +241,7 @@ jobs:
     flags:
       - gke
       - cd
+      - helm
 
 ##################################################################
 ####  App Build Verification Tests
